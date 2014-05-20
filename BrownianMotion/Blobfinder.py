@@ -1,8 +1,6 @@
 import numpy as np
 from PIL import Image
-import requests
 from StringIO import StringIO
-
 class Blob():
     def __init__():
         """
@@ -39,8 +37,18 @@ def BlobFinder(picture, tau):
     '''
     find all blobs in the picture using the luminance threshold tau
     '''
+    black = (0, 0, 0)
+    white = (255, 255, 255)
+    xsize, ysize = picture.size
+    temp = picture.load()
+    for x in range(xsize):
+        for y in range(ysize):
+            r,g,b = temp[x,y]
+            if r+g+b >= tau: 
+                temp[x,y] = black
+            else:
+                temp[x,y] = white
     return None
-
 
 def countBeads(P):
     '''
@@ -51,3 +59,9 @@ def getBeads(P):
     '''
     return all beads with >= P pixels
     '''
+if __name__ == "__main__":
+    p = 25
+    tau = 600
+    print tau, p
+    # pictureObject = # call from drive.
+    # BlobFinder(pictureObject, tau)
