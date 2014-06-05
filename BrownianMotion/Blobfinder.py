@@ -1,32 +1,35 @@
 import numpy as np
 from PIL import Image
 from StringIO import StringIO
+import requests
 class Blob():
     def __init__():
         """
         Construct an empty blob.
         """
+        self.name = []
+        self.mass = 0
         return None
 
-    def add(i,j):
+    def add(self, i, j):
         """
         Add a pixel (i, j) to the blob.
         """
         return None
 
-    def mass():
+    def mass(self):
         """
         Return number of pixels added equal to its mass.
         """
         return None
 
-    def distanceTo(blob):
+    def distanceTo(self, blob):
         """
         Return distance between the center of mass of this blob and b
         """
         return None
 
-    def centerOfMass():
+    def centerOfMass(self, ):
         """
         Return tuple of (x,y) values for this blob's center of mass.
         Format center-of-mass coordinates with 4 sig figs.
@@ -59,9 +62,9 @@ def getBeads(P):
     '''
     return all beads with >= P pixels
     '''
-if __name__ == "__main__":
-    p = 25
-    tau = 600
-    print tau, p
+#if __name__ == "__main__":
+#    p = 25
+#    tau = 600
+#    print tau, p
     # pictureObject = # call from drive.
     # BlobFinder(pictureObject, tau)
