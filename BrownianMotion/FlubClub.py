@@ -12,8 +12,7 @@ class Blob():
         it with information determined by other functions.
         """
         self.loc = [] # Stores the number of pixels; AKA mass or size of flubber.
-        self._mass = (len(self.loc))
-        
+        self._mass = 0
     def __repr__(self):
         return "<loc:%s mass:%s>" % (self.loc, self._mass)
     
@@ -24,7 +23,9 @@ class Blob():
         """
         Add a pixel (i, j) to the flubber as part of the drawing process.
         """
-        self.loc.append((i, j))
+        print "Add",i,j
+        (self__init__().loc).append((i, j))
+        self.mass = (len(self.loc))
         
     def mass(self):
         """
@@ -32,7 +33,6 @@ class Blob():
         """
         self._mass = (len(self.loc))
         return self._mass
-        
     def distanceTo(self, duece):
         """
         Return distance between the center of mass of this flubber and another.
@@ -58,26 +58,30 @@ class Blob():
         
 def flubberFinder(P, picture, tau):
     '''find all flubbers in the picture using the luminance threshold tau.'''
-    BLACK = (0, 0, 0); WHITE = (255, 255, 255); Flubber = [];
+    BLACK = (0, 0, 0); WHITE = (255, 255, 255); 
+    FlubArray = [] 
     
     tempImage = picture.load()
     horLen, verLen = picture.size
-    monochrome(picture, tau, horLen, verLen)    
+    monochrome(picture, tau)    
     
     for x in range(horLen):
         for y in range(verLen):
             if tempImage[x, y] == BLACK:
-                Flubber.append(fill(tempImage, horLen, verLen, x, y))
-    return Flubber
+                #Flubber = Blob();
+                #fill(picture, horLen, verLen, x, y, Flubber)
+                FlubArray.append(fill(picture, horLen, verLen, x, y))
+                #print str(Flubber.loc), str(Flubber.mass)
+    return FlubArray
 
-def monochrome(picture, tau, horLen, verLen):
+def monochrome(picture, tau):
     '''Reads and loads a temporary image to convert to black or white in regards to luminance threshold tau. '''
-    BLACK = (0, 0, 0); WHITE = (255, 255, 255); i = []; tempImage = picture.load();
+    BLACK = (0, 0, 0); WHITE = (255, 255, 255); i = []; tempImage = picture.load(); horLen, verLen = picture.size;
         
     for x in range(horLen):
         for y in range(verLen):
             r, g, b = tempImage[x, y]
-            if r + g + b >= tau: 
+            if r + g + b >= tau:
                 tempImage[x, y] = BLACK
             else:
                 tempImage[x,y] = WHITE
@@ -104,19 +108,19 @@ def monochrome(picture, tau, horLen, verLen):
 #    return flubberCount, qualFlubbers, flubberMassInfo
 
 def fill(picture, horLen, verLen, xi, yi):  #Using Fastfill algorithm.
-    '''Lists all the pixels that are associated with 
-    currentFlubber that haven't been filled or looked at.'''
-    
-    BLACK = (0, 0, 0); RED = (255, 0, 0); queue = [(xi, yi)]; Flubber = Blob(); #Flubber.add(xi, yi);
+    '''Lists all the pixels that are associated with currentFlubber that haven't been filled or looked at.'''
+    BLACK = (0, 0, 0); RED = (255, 0, 0); queue = [(xi, yi)];
     img = picture.load()
+    Flubber = Blob()
     while queue:
         x, y, queue = queue[0][0], queue[0][1], queue[1:]
         # Horizontal/Vertical Postive/Negative Displacement
         HPD = x + 1; HND = x - 1; VPD = y + 1; VND = y - 1;
         if img[x, y] == BLACK: #If pixel is black--track covered by changing to red.
             img[x, y] = RED
+            print "ADDING TO FLUBBER"
             Flubber.add(x, y) # Add this pixel to the current flubber array.
-
+            print str(Flubber)
             if x > 0 and img[HND, y] == BLACK: # "and" is from FastFill algorithm.
                 img[HND, y] = RED
                 queue.append((HND, y))
@@ -132,6 +136,7 @@ def fill(picture, horLen, verLen, xi, yi):  #Using Fastfill algorithm.
             if y < (verLen - 1) and img[x, VPD] == BLACK:
                 img[x, VPD] = RED
                 queue.append((x, VPD))
+    #Flubber.mass
     return Flubber
 
 
@@ -141,9 +146,10 @@ def qualityFlubbers(P, listFlubbers): #getBeads(P) Function
     '''
     return all unit flubbers with >= P pixels. 
     '''
-    tempListFlubbers = [] # circularInterpolation(listFlubbers)  --- Began implementing Bezier's tripled interpol for curves.
+    tempListFlubbers = [] 
+    print dir(listFlubbers), str(listFlubbers.loc), str(listFlubbers._mass)
     for i in listFlubbers:
-        if i.mass >= P:
+        if i._mass >= P:
             tempListFlubbers.append(i)
     return tempListFlubbers
 
@@ -153,6 +159,6 @@ def numFlubber(P, listFlubbers): #getBeads(P) Function (number of quality beads)
     '''
     count = 0;
     for i in listFlubbers:
-        if i.mass >= P:
+        if i._mass >= P:
             count += 1
     return count
